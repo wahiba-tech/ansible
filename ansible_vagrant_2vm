@@ -1,0 +1,57 @@
+# echo ***************************vm1 ansible********************************************************************
+Vagrant.configure("2") do |config|
+ config.vm.define "ansible" do |ansible|
+  ansible.vm.box = "centos/7"
+  ansible.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+    vb.cpus = "1"
+  end
+  ansible.vm.hostname = "ansible"
+  ansible.vm.network "public_network", ip: "192.168.1.77", bridge: "wlp2s0"
+
+
+ansible.vm.provision "shell", inline: <<-SHELL
+sudo yum update
+sudo yum upgrade
+sudo yum install -y epel-release
+sudo yum install -y ansible
+echo ---------------------------------------------------------------------------------------sshd_ansible_conf
+sudo sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+sudo sed -i 's/^PasswordAuthentication no/#PasswordAuthentication no/' /etc/ssh/sshd_config
+head -n 65 /etc/ssh/sshd_config| tail -n 4
+echo ---------------------------------------------------------------------------------------ssh_client
+sudo sed -i 's/^#\s*PasswordAuthentication\syes/PasswordAuthentication yes/' /etc/ssh/ssh_config
+head -n 25 /etc/ssh/ssh_config | tail -1
+sudo systemctl enable sshd
+sudo systemctl restart sshd
+SHELL
+end
+
+# echo ***************************vm2 client********************************************************************
+
+config.vm.define "clientssh" do |client|
+  client.vm.box = "centos/7"
+  client.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+    vb.cpus = "1"
+  end
+  client.vm.hostname = "client"
+  client.vm.network "public_network", ip: "192.168.1.78", bridge: "wlp2s0"
+
+
+client.vm.provision "shell", inline: <<-SHELL
+sudo yum update
+sudo yum upgrade
+echo ---------------------------------------------------------------------------------------sshd_conf
+sudo sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+sudo sed -i 's/^PasswordAuthentication no/#PasswordAuthentication no/' /etc/ssh/sshd_config
+head -n 65 /etc/ssh/sshd_config| tail -n 4
+echo ---------------------------------------------------------------------------------------ssh_client
+sudo sed -i 's/^#\s*PasswordAuthentication\syes/PasswordAuthentication yes/' /etc/ssh/ssh_config
+head -n 25 /etc/ssh/ssh_config | tail -1
+sudo systemctl enable sshd
+sudo systemctl restart sshd
+SHELL
+end
+
+end
