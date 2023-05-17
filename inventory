@@ -1,0 +1,15 @@
+all:
+  children:
+    test:
+      hosts:
+        node1:
+        node2:
+    dev:
+      hosts:
+        node1:
+    prod:
+      hosts:
+        node2:
+  vars:
+    ansible_user: cloud_user
+    ansible_ssh_private_key_file: /home/cloud_user/.ssh/id_rsa
