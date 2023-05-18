@@ -12,3 +12,8 @@
 Create a template file. Let's name it host_info.txt.j2 . This file will contain the template with placeholders for the hostname and IP address.
 Hostname: {{ ansible_hostname }}
 IP Address: {{ ansible_default_ipv4.address }}
+----------------------------------------------------------------------------------------------------------------------------------------------
+By default, the template module in Ansible will overwrite the destination file with the rendered template. This means that if the destination file
+already exists, it will be replaced with the new rendered content. If you want to append the rendered content to an existing file instead of overwriting
+it, you can use the blockinfile module in Ansible. The blockinfile module allows you to insert/update/remove a block of multi-line text in a file.
+
