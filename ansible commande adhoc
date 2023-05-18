@@ -1,11 +1,17 @@
+ansible node1 -m ping
 # create user with commande ansible
 ansible dbsystems -b -m user -a "name=consultant"
-ansible dbsystems -b -m user -a "name=supervisor"
 # create file with ansible
 ansible dbsystems -b -m file -a "path=/home/consultant/.ssh state=directory owner=consultant group=consultant mode=0755"
-ansible dbsystems -b -m file -a "path=/home/supervisor/.ssh state=directory owner=supervisor group=supervisor mode=0755"
 # copy file from controller to nodes and change their owners
 ansible dbsystems -b -m copy -a "src=/home/ansible/keys/consultant/authorized_keys dest=/home/consultant/.ssh/authorized_keys mode=0600 owner=consultant group=consultant"
-ansible dbsystems -b -m copy -a "src=/home/ansible/keys/supervisor/authorized_keys dest=/home/supervisor/.ssh/authorized_keys mode=0600 owner=supervisor group=supervisor"
 # show state of service like systemct
 ansible all -b -m service -a "name=auditd state=started enabled=yes"
+# create a sudo user and add a password
+ansible webs -m user -a "name=<username> password=<password> append=yes groups=sudo"
+# start the httpd service
+ansible webs -m service -a "name=httpd state=started"
+# update the hosts called "webs"
+ansible webs -m command -a "apt update"
+# copy a directory from /data to a host called "webs"
+ansible webs -m copy -a "src=/data/ dest=/path/to/destination/"
