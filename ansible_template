@@ -1,0 +1,12 @@
+---
+- name: Render host information template
+  hosts: webs
+  tasks:
+    - name: Render template
+      template:
+        src: host_info.txt.j2
+        dest: /path/to/output/file/host_info.txt
+        -------------------------------------------------------
+Create a template file. Let's name it host_info.txt.j2 . This file will contain the template with placeholders for the hostname and IP address.
+Hostname: {{ ansible_hostname }}
+IP Address: {{ ansible_default_ipv4.address }}
