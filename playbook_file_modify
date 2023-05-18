@@ -1,0 +1,22 @@
+# ecrasser fichier avec un tell contenu
+---
+- name: Overwrite MOTD playbook
+  hosts: all
+  become: true
+  tasks:
+    - name: Update MOTD file
+      lineinfile:
+        path: /etc/motd
+        line: "hello motd playbook right now with ansible
+ --------------------------------------------------------------------------
+# modifier ligne dans un fichier 
+---
+- name: Modify MOTD playbook
+  hosts: all
+  become: true
+  tasks:
+    - name: Modify MOTD file
+      replace:
+        path: /etc/motd
+        regexp: 'motd'
+        replace: 'world'
