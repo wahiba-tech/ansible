@@ -1,0 +1,25 @@
+---
+- name: Create user and grant sudo access
+  hosts: all
+  become: true
+  tasks:
+    - name: Create user 'salim'
+      user:
+        name: salim
+        password: "{{ 'salim' | password_hash('sha512') }}"
+        shell: /bin/bash
+
+    - name: Add 'salim' to 'wheel' group
+      user:
+        name: salim
+        groups: wheel
+        append: yes
+
+    - name: Update sudoers file to allow 'wheel' group
+      lineinfile:
+        path: /etc/sudoers
+        line: "%wheel ALL=(ALL) NOPASSWD: ALL"
+        validate: visudo -cf %s
+
+    - name: Reload sudoers after modification
+      command: visudo -c
