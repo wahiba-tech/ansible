@@ -1,0 +1,69 @@
+---
+- name: Install Docker, Nginx, and py-docker
+  hosts: prod 
+  become: true
+  tasks:
+    - name: Run yum update
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Install yum-utils
+      yum:
+        name: yum-utils
+        state: present
+
+    - name: Add Docker repository
+      shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      args:
+        creates: /etc/yum.repos.d/docker-ce.repo
+
+    - name: Install Docker packages
+      yum:
+        name: 
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+
+    - name: Enable Docker service
+      systemd:
+        name: docker
+        enabled: yes
+
+    - name: Start Docker service
+      systemd:
+        name: docker
+        state: started
+
+    - name: Install pip
+      yum:
+        name: python3-pip
+        state: present
+
+    - name: Upgrade pip
+      pip:
+        name: pip
+        state: latest
+
+    - name: Install py-docker package
+      pip:
+        name: py-docker
+        state: present
+
+    - name: Pull Nginx image
+      docker_image:
+        name: nginx
+        state: present
+
+    - name: Start Nginx container
+      docker_container:
+        name: my_nginx
+        image: nginx
+        ports:
+          - "80:80"
+        state: started
+
+

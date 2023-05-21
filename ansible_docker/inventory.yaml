@@ -1,0 +1,13 @@
+all :
+  hosts : 
+  children :
+      app :
+        hosts :
+         client :
+         ansible :
+      prod :
+        hosts :
+          client :
+      db :
+        hosts :
+          ansible:
