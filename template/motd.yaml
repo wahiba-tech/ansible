@@ -1,0 +1,9 @@
+---
+- name : update motd
+  hosts : prod
+  become: true
+  tasks : 
+    - name : write template to motd
+      template :
+        src : template.j2
+        dest : /etc/motd
