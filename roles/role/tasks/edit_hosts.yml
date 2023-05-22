@@ -1,0 +1,4 @@
+---
+- lineinfile:
+    line: "<<PROVIDED>PROVIDED> nagios.example.com"
+    path: /etc/hosts
